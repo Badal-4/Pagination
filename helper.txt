@@ -1,0 +1,25 @@
+({
+    getAccountList : function(component,pageNumber,pageSize)
+    {
+        var action = component.get("c.getAccountData");
+        action.setParams({
+            pageNumber : pageNumber,
+            pageSize : pageSize
+        });
+        action.setCallback(this,function(response)
+                           {
+                               var state = response.getState();
+                               if(state === "SUCCESS")
+                               {
+                                   var res = response.getReturnValue();
+                                   component.set("v.accountList",res.accList);
+                                   component.set("v.PageNumber",res.pageNumber);
+                                   component.set("v.TotalRecords",res.totalRecords);
+                                   component.set("v.RecordStart",res.recordStart);
+                                   component.set("v.RecordEnd",res.recordEnd);
+                                   component.set("v.TotalPages", Math.ceil(res.totalRecords / pageSize))
+                               }
+                           });
+        $A.enqueueAction(action);
+    }
+})
